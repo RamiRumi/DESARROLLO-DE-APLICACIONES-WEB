@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SurtiBelleza | Cosméticos Premium & Cuidado Personal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-rose: #ff6b9d;
+            --secondary-gold: #ffd700;
+            --accent-purple: #c471ed;
+            --soft-pink: #ffe6f0;
+            --gradient-main: linear-gradient(135deg, #ff6b9d 0%, #c471ed 50%, #ffa8d5 100%);
+            --gradient-soft: linear-gradient(135deg, #fff5f8 0%, #ffe6f0 100%);
+            --dark-elegant: #2d1b2e;
+            --transition-luxury: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background: var(--soft-pink);
+        }
+
+        /* Navegación Elegante */
+        .navbar {
+            background: rgba(255, 255, 255, 0.98) !important;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(255, 107, 157, 0.1);
+            transition: var(--transition-luxury);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--soft-pink);
+        }
+
+        .navbar-scrolled {
+            box-shadow: 0 8px 40px rgba(255, 107, 157, 0.2);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.8rem;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-main);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .nav-link {
+            color: var(--dark-elegant) !important;
+            position: relative;
+            margin: 0 15px;
+            font-weight: 600;
+            transition: var(--transition-luxury);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: var(--gradient-main);
+            transition: width 0.4s ease;
+            border-radius: 2px;
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-rose) !important;
+            transform: translateY(-3px);
+        }
+
+        /* Hero Section Glamouroso */
+        .hero-section {
+            background: var(--gradient-main);
+            padding: 140px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(30px, -30px) rotate(5deg); }
+            50% { transform: translate(-20px, 20px) rotate(-5deg); }
+            75% { transform: translate(40px, 10px) rotate(3deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 25px;
+            text-shadow: 2px 4px 20px rgba(0, 0, 0, 0.2);
+            animation: fadeInScale 1s ease;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 35px;
+            animation: fadeInScale 1s ease 0.2s both;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 25px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Cards de Productos Premium */
+        .product-card {
+            background: white;
+            border-radius: 25px;
+            padding: 0;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 50px rgba(255, 107, 157, 0.15);
+            transition: var(--transition-luxury);
+            border: none;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--gradient-main);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .product-card:hover {
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 0 25px 70px rgba(255, 107, 157, 0.3);
+        }
+
+        .product-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 25px 25px 0 0;
+            height: 280px;
+        }
+
+        .product-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-luxury);
+        }
+
+        .product-card:hover .product-image-container img {
+            transform: scale(1.15) rotate(2deg);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--gradient-main);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 5px 20px rgba(255, 107, 157, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .product-content {
+            padding: 30px;
+        }
+
+        .product-category {
+            color: var(--primary-rose);
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 10px;
+        }
+
+        .product-card h3 {
+            color: var(--dark-elegant);
+            font-weight: 800;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .product-card p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .star {
+            color: var(--secondary-gold);
+            font-size: 1.1rem;
+        }
+
+        .rating-count {
+            color: #999;
+            font-size: 0.9rem;
+            margin-left: 8px;
+        }
+
+        /* Botones de Lujo */
+        .btn-primary {
+            background: var(--gradient-main) !important;
+            border: none !important;
+            padding: 16px 45px;
+            font-weight: 700;
+            border-radius: 50px;
+            box-shadow: 0 12px 35px rgba(255, 107, 157, 0.35);
+            transition: var(--transition-luxury);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            width: 350px;
+            height: 350px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 18px 50px rgba(255, 107, 157, 0.5);
+        }
+
+        .btn-outline-rose {
+            border: 2px solid var(--primary-rose);
+            color: var(--primary-rose);
+            background: transparent;
+            padding: 14px 40px;
+            font-weight: 700;
+            border-radius: 50px;
+            transition: var(--transition-luxury);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-outline-rose:hover {
+            background: var(--gradient-main);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 107, 157, 0.35);
+        }
+
+        /* Formulario Boutique */
+        .contact-section {
+            background: var(--gradient-soft);
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .contact-section::before {
+            content: '✨';
+            position: absolute;
+            top: 10%;
+            left: 5%;
+            font-size: 4rem;
+            opacity: 0.1;
+            animation: twinkle 3s infinite;
+        }
+
+        .contact-section::after {
+            content: '💄';
+            position: absolute;
+            bottom: 10%;
+            right: 5%;
+            font-size: 4rem;
+            opacity: 0.1;
+            animation: twinkle 4s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.1; transform: scale(1); }
+            50% { opacity: 0.2; transform: scale(1.1); }
+        }
+
+        .form-control {
+            border: 2px solid rgba(255, 107, 157, 0.2);
+            border-radius: 15px;
+            padding: 16px 22px;
+            transition: var(--transition-luxury);
+            background: white;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-rose);
+            box-shadow: 0 0 0 0.25rem rgba(255, 107, 157, 0.15);
+            transform: translateY(-3px);
+            background: white;
+        }
+
+        .form-label {
+            font-weight: 700;
+            color: var(--dark-elegant);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 30px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(255, 107, 157, 0.2);
+            border: 3px solid rgba(255, 107, 157, 0.1);
+        }
+
+        /* Sección Collapse Sofisticada */
+        .benefits-section {
+            background: white;
+            padding: 100px 0;
+        }
+
+        .collapse-btn {
+            width: 100%;
+            text-align: left;
+            padding: 25px 30px;
+            background: var(--soft-pink);
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            color: var(--dark-elegant);
+            transition: var(--transition-luxury);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(255, 107, 157, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+        }
+
+        .collapse-btn:hover {
+            background: var(--gradient-main);
+            color: white;
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(255, 107, 157, 0.3);
+        }
+
+        .collapse-btn i {
+            transition: transform 0.3s ease;
+        }
+
+        .collapse-btn:not(.collapsed) i {
+            transform: rotate(180deg);
+        }
+
+        .collapse-content {
+            background: linear-gradient(135deg, #fff5f8 0%, white 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary-rose);
+            box-shadow: 0 5px 20px rgba(255, 107, 157, 0.08);
+        }
+
+        .collapse-content p {
+            margin: 0;
+            color: #555;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* Footer Elegante */
+        footer {
+            background: linear-gradient(135deg, var(--dark-elegant) 0%, #1a0f1b 100%);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 70px 0 30px;
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-main);
+        }
+
+        .footer-title {
+            color: white;
+            font-weight: 800;
+            margin-bottom: 25px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .footer-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition-luxury);
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-rose);
+            transform: translateX(8px);
+            text-decoration: none;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 107, 157, 0.15);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 8px;
+            transition: var(--transition-luxury);
+            color: white;
+            font-size: 1.2rem;
+            border: 2px solid transparent;
+        }
+
+        .social-icon:hover {
+            background: var(--gradient-main);
+            transform: translateY(-8px) rotate(360deg);
+            box-shadow: 0 10px 30px rgba(255, 107, 157, 0.4);
+            border-color: white;
+        }
+
+        .newsletter-input {
+            border-radius: 50px;
+            padding: 14px 25px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .newsletter-input:focus {
+            border-color: var(--primary-rose);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .newsletter-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Sección de características */
+        .features-section {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 30px;
+            transition: var(--transition-luxury);
+        }
+
+        .feature-icon {
+            width: 90px;
+            height: 90px;
+            background: var(--gradient-main);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2.5rem;
+            box-shadow: 0 10px 30px rgba(255, 107, 157, 0.3);
+            transition: var(--transition-luxury);
+        }
+
+        .feature-item:hover .feature-icon {
+            transform: translateY(-10px) rotate(360deg);
+            box-shadow: 0 15px 40px rgba(255, 107, 157, 0.5);
+        }
+
+        .feature-item h4 {
+            font-weight: 700;
+            color: var(--dark-elegant);
+            margin-bottom: 15px;
+        }
+
+        /* Media Queries Responsivas */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .product-card {
+                margin-bottom: 25px;
+            }
+
+            .navbar-brand {
+                font-size: 1.3rem;
+            }
+
+            .btn-primary {
+                padding: 14px 35px;
+                font-size: 0.9rem;
+            }
+
+            .form-card {
+                padding: 35px 25px;
+            }
+
+            .feature-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-section {
+                padding: 100px 0 70px;
+            }
+
+            .product-image-container {
+                height: 220px;
+            }
+
+            .product-content {
+                padding: 25px;
+            }
+
+            body {
+                background: linear-gradient(135deg, #fff5f8 0%, #ffd6e8 100%);
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .collapse-btn {
+                padding: 20px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Animaciones de entrada */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegación Premium -->
+    <nav class="navbar navbar-expand-md navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <div class="brand-icon">
+                    <i class="bi bi-gem"></i>
+                </div>
+                SurtiBelleza
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#productos">Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#beneficios">Beneficios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-bag-heart"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section Glamurosa -->
+    <section class="hero-section">
+        <div class="container hero-content">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <div class="hero-badge">
+                        <i class="bi bi-stars me-2"></i> Cosméticos Premium Certificados
+                    </div>
+                    <h1 class="hero-title">Realza Tu Belleza Natural</h1>
+                    <p class="hero-subtitle">Descubre nuestra colección exclusiva de productos cosméticos de alta gama, formulados con ingredientes naturales para revelar tu esencia más radiante</p>
+                    <button class="btn btn-primary btn-lg me-3 mb-3">
+                        <i class="bi bi-cart-plus me-2"></i> Explorar Catálogo
+                    </button>
+                    <button class="btn btn-outline-rose btn-lg mb-3">
+                        <i class="bi bi-gift me-2"></i> Ofertas Especiales
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Características Distintivas -->
+    <section class="features-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-truck" style="color: white;"></i>
+                    </div>
+                    <h4>Envío Gratuito</h4>
+                    <p>En compras superiores a $50 con entrega express en 24-48 horas</p>
+                </div>
+                <div class="col-md-4 feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-shield-check" style="color: white;"></i>
+                    </div>
+                    <h4>100% Originales</h4>
+                    <p>Productos certificados con garantía de autenticidad y calidad</p>
+                </div>
+                <div class="col-md-4 feature-item">
+                    <div class="feature-icon">
+                        <i class="bi bi-award" style="color: white;"></i>
+                    </div>
+                    <h4>Marcas Premium</h4>
+                    <p>Representantes oficiales de las mejores marcas internacionales</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Productos (Grid Bootstrap) -->
+    <section class="py-5" id="productos" style="background: var(--gradient-soft);">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="display-4 fw-bold mb-3" style="color: var(--dark-elegant);">Colección Exclusiva</h2>
+                    <p class="lead" style="color: #666;">Productos seleccionados cuidadosamente para tu rutina de belleza</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card product-card">
+                        <div class="product-image-container">
+                            <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80" class="img-fluid" alt="Sérum Facial">
+                            <div class="product-badge">NUEVO</div>
+                        </div>
+                        <div class="product-content">
+                            <div class="product-category">Cuidado Facial</div>
+                            <h3>Sérum Hidratante Intensivo</h3>
+                            <div class="product-rating">
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-half star"></i>
+                                <span class="rating-count">(847 reseñas)</span>
+                            </div>
+                            <p>Fórmula avanzada con ácido hialurónico y vitamina C que proporciona hidratación profunda durante 48 horas. Textura ligera de absorción inmediata.</p>
+                            <button class="btn btn-primary w-100">
+                                <i class="bi bi-bag-plus me-2"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card product-card">
+                        <div class="product-image-container">
+                            <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&q=80" class="img-fluid" alt="Labial Premium">
+                            <div class="product-badge" style="background: var(--secondary-gold); color: var(--dark-elegant);">BESTSELLER</div>
+                        </div>
+                        <div class="product-content">
+                            <div class="product-category">Maquillaje</div>
+                            <h3>Labial Mate de Larga Duración</h3>
+                            <div class="product-rating">
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-fill star"></i>
+                                <span class="rating-count">(1,245 reseñas)</span>
+                            </div>
+                            <p>Acabado mate aterciopelado con duración de hasta 16 horas. Enriquecido con manteca de karité y vitamina E para máxima hidratación. 12 tonos disponibles.</p>
+                            <button class="btn btn-primary w-100">
+                                <i class="bi bi-bag-plus me-2"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card product-card">
+                        <div class="product-image-container">
+                            <img src="https://images.unsplash.com/photo-1571875257727-256c39da42af?w=800&q=80" class="img-fluid" alt="Perfume">
+                            <div class="product-badge" style="background: var(--accent-purple);">EXCLUSIVO</div>
+                        </div>
+                        <div class="product-content">
+                            <div class="product-category">Fragancias</div>
+                            <h3>Eau de Parfum Floral Elegance</h3>
+                            <div class="product-rating">
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-fill star"></i>
+                                <i class="bi bi-star-fill star"></i>
+                                <span class="rating-count">(623 reseñas)</span>
+                            </div>
+                            <p>Fragancia sofisticada con notas de jazmín, rosa damascena y vainilla. Concentración premium que garantiza hasta 12 horas de duración excepcional.</p>
+                            <button class="btn btn
