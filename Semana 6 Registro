@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Dinámico con Validación</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(to right, #4a6cf7, #7a52e3);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .header i {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 2.5rem;
+            opacity: 0.7;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            flex: 1 1 300px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .form-group label i {
+            margin-right: 8px;
+            color: #4a6cf7;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 45px 14px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #4a6cf7;
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
+        }
+
+        .form-control.valid {
+            border-color: #2ecc71;
+            background-color: rgba(46, 204, 113, 0.05);
+        }
+
+        .form-control.invalid {
+            border-color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.05);
+        }
+
+        .validation-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .valid + .validation-icon {
+            opacity: 1;
+            color: #2ecc71;
+        }
+
+        .invalid + .validation-icon {
+            opacity: 1;
+            color: #e74c3c;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 6px;
+            min-height: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .show-error {
+            opacity: 1;
+        }
+
+        .password-requirements {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+            padding-left: 5px;
+        }
+
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        .requirement i {
+            margin-right: 5px;
+            font-size: 0.8rem;
+        }
+
+        .requirement.met {
+            color: #2ecc71;
+        }
+
+        .requirement.unmet {
+            color: #95a5a6;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 200px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(to right, #4a6cf7, #7a52e3);
+            color: white;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(74, 108, 247, 0.4);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-reset {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .btn-reset:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .success-message {
+            background: linear-gradient(to right, #2ecc71, #1abc9c);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .success-message h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease;
+        }
+
+        .form-progress {
+            height: 6px;
+            background-color: #eee;
+            border-radius: 3px;
+            margin-top: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #4a6cf7, #7a52e3);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .btn {
+                min-width: 100%;
+            }
+            
+            .header i {
+                position: static;
+                display: block;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-user-check"></i> Validación Dinámica</h1>
+            <p>Formulario interactivo con validaciones en tiempo real</p>
+        </div>
+
+        <div class="form-container">
+            <form id="dynamicForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre"><i class="fas fa-user"></i> Nombre completo</label>
+                        <div class="input-container">
+                            <input 
+                                type="text" 
+                                id="nombre" 
+                                class="form-control" 
+                                placeholder="Ingresa tu nombre completo"
+                                autocomplete="off"
+                            >
+                            <span class="validation-icon">
+                                <i class="fas fa-check-circle"></i>
+                                <i class="fas fa-exclamation-circle"></i>
+                            </span>
+                        </div>
+                        <div class="error-message" id="nombreError">El nombre debe tener al menos 3 caracteres.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email"><i class="fas fa-envelope"></i> Correo electrónico</label>
+                        <div class="input-container">
+                            <input 
+                                type="email" 
+                                id="email" 
+                                class="form-control" 
+                                placeholder="ejemplo@correo.com"
+                                autocomplete="off"
+                            >
+                            <span class="validation-icon">
+                                <i class="fas fa-check-circle"></i>
+                                <i class="fas fa-exclamation-circle"></i>
+                            </span>
+                        </div>
+                        <div class="error-message" id="emailError">Ingresa un correo electrónico válido.</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password"><i class="fas fa-lock"></i> Contraseña</label>
+                        <div class="input-container">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                class="form-control" 
+                                placeholder="Crea una contraseña segura"
+                                autocomplete="off"
+                            >
+                            <span class="validation-icon">
+                                <i class="fas fa-check-circle"></i>
+                                <i class="fas fa-exclamation-circle"></i>
+                            </span>
+                        </div>
+                        <div class="error-message" id="passwordError">La contraseña debe tener al menos 8 caracteres con un número y un carácter especial.</div>
+                        
+                        <div class="password-requirements" id="passwordRequirements">
+                            <div class="requirement unmet" id="reqLength"><i class="fas fa-circle"></i> Mínimo 8 caracteres</div>
+                            <div class="requirement unmet" id="reqNumber"><i class="fas fa-circle"></i> Al menos un número</div>
+                            <div class="requirement unmet" id="reqSpecial"><i class="fas fa-circle"></i> Al menos un carácter especial (!@#$%^&*)</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword"><i class="fas fa-lock"></i> Confirmar contraseña</label>
+                        <div class="input-container">
+                            <input 
+                                type="password" 
+                                id="confirmPassword" 
+                                class="form-control" 
+                                placeholder="Repite tu contraseña"
+                                autocomplete="off"
+                            >
+                            <span class="validation-icon">
+                                <i class="fas fa-check-circle"></i>
+                                <i class="fas fa-exclamation-circle"></i>
+                            </span>
+                        </div>
+                        <div class="error-message" id="confirmPasswordError">Las contraseñas no coinciden.</div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edad"><i class="fas fa-birthday-cake"></i> Edad</label>
+                        <div class="input-container">
+                            <input 
+                                type="number" 
+                                id="edad" 
+                                class="form-control" 
+                                placeholder="Ingresa tu edad"
+                                min="1"
+                                max="120"
+                                autocomplete="off"
+                            >
+                            <span class="validation-icon">
+                                <i class="fas fa-check-circle"></i>
+                                <i class="fas fa-exclamation-circle"></i>
+                            </span>
+                        </div>
+                        <div class="error-message" id="edadError">Debes tener al menos 18 años para registrarte.</div>
+                    </div>
+                </div>
+
+                <div class="form-progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <div class="button-container">
+                    <button type="submit" class="btn btn-submit" id="submitBtn" disabled>
+                        <i class="fas fa-paper-plane"></i> Enviar Formulario
+                    </button>
+                    <button type="button" class="btn btn-reset" id="resetBtn">
+                        <i class="fas fa-redo"></i> Reiniciar Formulario
+                    </button>
+                </div>
+            </form>
+
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <h3>¡Formulario Validado Exitosamente!</h3>
+                <p>Todos los campos han sido validados correctamente. Los datos están listos para ser procesados.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Selección de elementos del DOM
+        const form = document.getElementById('dynamicForm');
+        const nombreInput = document.getElementById('nombre');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const edadInput = document.getElementById('edad');
+        const submitBtn = document.getElementById('submitBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const successMessage = document.getElementById('successMessage');
+        const progressBar = document.getElementById('progressBar');
+        
+        // Variables para almacenar el estado de validación
+        const validationState = {
+            nombre: false,
+            email: false,
+            password: false,
+            confirmPassword: false,
+            edad: false
+        };
+        
+        // Expresiones regulares para validaciones
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const passwordNumberRegex = /\d/;
+        const passwordSpecialRegex = /[!@#$%^&*]/;
+        
+        // Función para actualizar la barra de progreso
+        function updateProgressBar() {
+            const totalFields = Object.keys(validationState).length;
+            const validFields = Object.values(validationState).filter(state => state).length;
+            const progressPercentage = (validFields / totalFields) * 100;
+            
+            progressBar.style.width = `${progressPercentage}%`;
+        }
+        
+        // Función para verificar si todos los campos son válidos
+        function checkAllFieldsValid() {
+            return Object.values(validationState).every(state => state);
+        }
+        
+        // Función para habilitar/deshabilitar el botón de envío
+        function updateSubmitButton() {
+            if (checkAllFieldsValid()) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+        
+        // Función para mostrar/ocultar mensaje de error
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.classList.add('show-error');
+        }
+        
+        function hideError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.classList.remove('show-error');
+        }
+        
+        // Función para actualizar el estado visual del campo
+        function updateFieldValidation(field, isValid) {
+            const inputElement = document.getElementById(field);
+            
+            if (isValid) {
+                inputElement.classList.remove('invalid');
+                inputElement.classList.add('valid');
+                hideError(`${field}Error`);
+            } else {
+                inputElement.classList.remove('valid');
+                inputElement.classList.add('invalid');
+            }
+            
+            validationState[field] = isValid;
+            updateProgressBar();
+            updateSubmitButton();
+        }
+        
+        // Validación del nombre
+        function validateNombre() {
+            const nombre = nombreInput.value.trim();
+            const isValid = nombre.length >= 3;
+            
+            if (!isValid && nombre.length > 0) {
+                showError('nombreError', 'El nombre debe tener al menos 3 caracteres.');
+            }
+            
+            updateFieldValidation('nombre', isValid);
+            return isValid;
+        }
+        
+        // Validación del email
+        function validateEmail() {
+            const email = emailInput.value.trim();
+            const isValid = emailRegex.test(email);
+            
+            if (!isValid && email.length > 0) {
+                showError('emailError', 'Ingresa un correo electrónico válido (ejemplo: usuario@dominio.com).');
+            }
+            
+            updateFieldValidation('email', isValid);
+            return isValid;
+        }
+        
+        // Validación de la contraseña
+        function validatePassword() {
+            const password = passwordInput.value;
+            
+            // Verificar cada requisito individualmente
+            const hasMinLength = password.length >= 8;
+            const hasNumber = passwordNumberRegex.test(password);
+            const hasSpecialChar = passwordSpecialRegex.test(password);
+            
+            // Actualizar indicadores visuales de requisitos
+            document.getElementById('reqLength').className = hasMinLength ? 'requirement met' : 'requirement unmet';
+            document.getElementById('reqNumber').className = hasNumber ? 'requirement met' : 'requirement unmet';
+            document.getElementById('reqSpecial').className = hasSpecialChar ? 'requirement met' : 'requirement unmet';
+            
+            // Determinar si la contraseña es válida
+            const isValid = hasMinLength && hasNumber && hasSpecialChar;
+            
+            if (!isValid && password.length > 0) {
+                showError('passwordError', 'La contraseña no cumple con todos los requisitos.');
+            }
+            
+            updateFieldValidation('password', isValid);
+            
+            // Si hay confirmación de contraseña, validarla también
+            if (confirmPasswordInput.value.length > 0) {
+                validateConfirmPassword();
+            }
+            
+            return isValid;
+        }
+        
+        // Validación de confirmación de contraseña
+        function validateConfirmPassword() {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const isValid = password === confirmPassword && password.length > 0;
+            
+            if (!isValid && confirmPassword.length > 0) {
+                showError('confirmPasswordError', 'Las contraseñas no coinciden.');
+            }
+            
+            updateFieldValidation('confirmPassword', isValid);
+            return isValid;
+        }
+        
+        // Validación de la edad
+        function validateEdad() {
+            const edad = parseInt(edadInput.value);
+            const isValid = !isNaN(edad) && edad >= 18;
+            
+            if (!isValid && edadInput.value.length > 0) {
+                showError('edadError', 'Debes tener al menos 18 años para registrarte.');
+            }
+            
+            updateFieldValidation('edad', isValid);
+            return isValid;
+        }
+        
+        // Función para reiniciar el formulario
+        function resetForm() {
+            form.reset();
+            
+            // Restablecer estados visuales
+            const inputs = form.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.classList.remove('valid', 'invalid');
+            });
+            
+            // Restablecer mensajes de error
+            const errorMessages = form.querySelectorAll('.error-message');
+            errorMessages.forEach(error => {
+                error.classList.remove('show-error');
+            });
+            
+            // Restablecer requisitos de contraseña
+            const requirements = document.querySelectorAll('.requirement');
+            requirements.forEach(req => {
+                req.className = 'requirement unmet';
+            });
+            
+            // Restablecer estado de validación
+            Object.keys(validationState).forEach(key => {
+                validationState[key] = false;
+            });
+            
+            // Ocultar mensaje de éxito
+            successMessage.classList.remove('show');
+            
+            // Restablecer barra de progreso
+            progressBar.style.width = '0%';
+            
+            // Deshabilitar botón de envío
+            submitBtn.disabled = true;
+            
+            // Enfocar el primer campo
+            nombreInput.focus();
+        }
+        
+        // Función para manejar el envío del formulario
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // Validar todos los campos una última vez
+            const isNombreValid = validateNombre();
+            const isEmailValid = validateEmail();
+            const isPasswordValid = validatePassword();
+            const isConfirmPasswordValid = validateConfirmPassword();
+            const isEdadValid = validateEdad();
+            
+            // Si todos los campos son válidos, mostrar mensaje de éxito
+            if (isNombreValid && isEmailValid && isPasswordValid && 
+                isConfirmPasswordValid && isEdadValid) {
+                
+                // Añadir animación al botón
+                submitBtn.classList.add('shake');
+                setTimeout(() => {
+                    submitBtn.classList.remove('shake');
+                }, 500);
+                
+                // Mostrar mensaje de éxito
+                successMessage.classList.add('show');
+                
+                // Desplazar hacia el mensaje de éxito
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Deshabilitar el botón temporalmente
+                submitBtn.disabled = true;
+                setTimeout(() => {
+                    if (checkAllFieldsValid()) {
+                        submitBtn.disabled = false;
+                    }
+                }, 3000);
+            }
+        }
+        
+        // Event Listeners para validación en tiempo real
+        nombreInput.addEventListener('input', validateNombre);
+        nombreInput.addEventListener('blur', validateNombre);
+        
+        emailInput.addEventListener('input', validateEmail);
+        emailInput.addEventListener('blur', validateEmail);
+        
+        passwordInput.addEventListener('input', validatePassword);
+        passwordInput.addEventListener('blur', validatePassword);
+        
+        confirmPasswordInput.addEventListener('input', validateConfirmPassword);
+        confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
+        
+        edadInput.addEventListener('input', validateEdad);
+        edadInput.addEventListener('blur', validateEdad);
+        
+        // Event Listeners para botones
+        form.addEventListener('submit', handleSubmit);
+        resetBtn.addEventListener('click', resetForm);
+        
+        // Event Listeners para mejorar la experiencia de usuario
+        document.querySelectorAll('.form-control').forEach(input => {
+            // Enfocar el campo cuando se hace clic en él
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+            
+            // Permitir usar la tecla Enter para navegar entre campos
+            input.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    const form = this.closest('form');
+                    const inputs = Array.from(form.querySelectorAll('.form-control'));
+                    const currentIndex = inputs.indexOf(this);
+                    
+                    if (currentIndex < inputs.length - 1) {
+                        inputs[currentIndex + 1].focus();
+                    }
+                }
+            });
+        });
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer el foco inicial en el campo de nombre
+            nombreInput.focus();
+            
+            // Añadir efecto de aparición al formulario
+            const formContainer = document.querySelector('.form-container');
+            formContainer.style.opacity = '0';
+            formContainer.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                formContainer.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                formContainer.style.opacity = '1';
+                formContainer.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
