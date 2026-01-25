@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Dinámica de Productos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .product-form {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border: 1px solid #eaeaea;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-control {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .product-list-container {
+            margin-top: 2rem;
+        }
+        
+        .product-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .product-count {
+            background-color: #3498db;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        #productList {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .product-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-item:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .product-name {
+            color: #2c3e50;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .product-price {
+            color: #2ecc71;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .product-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #95a5a6;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #95a5a6;
+            grid-column: 1 / -1;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eaeaea;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .form-group {
+                flex-direction: column;
+            }
+            
+            .form-control {
+                min-width: 100%;
+            }
+            
+            #productList {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-shopping-basket"></i> Lista Dinámica de Productos</h1>
+            <p class="subtitle">Implementación con plantillas y manipulación del DOM en JavaScript</p>
+        </header>
+        
+        <section class="product-form">
+            <h2><i class="fas fa-plus-circle"></i> Agregar Nuevo Producto</h2>
+            <div class="form-group">
+                <input type="text" id="productName" class="form-control" placeholder="Nombre del producto" required>
+                <input type="number" id="productPrice" class="form-control" placeholder="Precio ($)" min="0" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <textarea id="productDescription" class="form-control" placeholder="Descripción breve" rows="3" required></textarea>
+            </div>
+            <button id="addProductBtn" class="btn btn-success">
+                <i class="fas fa-plus"></i> Agregar Producto
+            </button>
+            <button id="resetBtn" class="btn btn-primary">
+                <i class="fas fa-redo"></i> Restablecer Lista
+            </button>
+        </section>
+        
+        <section class="product-list-container">
+            <div class="product-list-header">
+                <h2><i class="fas fa-list"></i> Productos Disponibles</h2>
+                <div class="product-count">Total: <span id="productCount">0</span></div>
+            </div>
+            
+            <ul id="productList">
+                <!-- Los productos se renderizarán aquí dinámicamente -->
+                <li class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <h3>No hay productos disponibles</h3>
+                    <p>Agrega tu primer producto usando el formulario superior</p>
+                </li>
+            </ul>
+        </section>
+        
+        <footer>
+            <p>Desarrollado con JavaScript • Plantillas Dinámicas • Manipulación del DOM</p>
+            <p>Presiona F12 para ver la consola y los datos generados</p>
+        </footer>
+    </div>
+
+    <script>
+        // Arreglo inicial de productos
+        let productos = [
+            {
+                id: 1,
+                nombre: "Laptop Pro",
+                precio: 1299.99,
+                descripcion: "Portátil de alto rendimiento para trabajo y gaming",
+                fecha: "2023-10-15"
+            },
+            {
+                id: 2,
+                nombre: "Smartphone X",
+                precio: 899.50,
+                descripcion: "Teléfono inteligente con cámara de 108MP y pantalla AMOLED",
+                fecha: "2023-11-20"
+            },
+            {
+                id: 3,
+                nombre: "Tablet Lite",
+                precio: 349.99,
+                descripcion: "Tablet ligera ideal para lectura y multimedia",
+                fecha: "2023-12-05"
+            },
+            {
+                id: 4,
+                nombre: "Auriculares Bluetooth",
+                precio: 199.99,
+                descripcion: "Auriculares inalámbricos con cancelación de ruido activa",
+                fecha: "2024-01-10"
+            },
+            {
+                id: 5,
+                nombre: "Smartwatch Pro",
+                precio: 299.95,
+                descripcion: "Reloj inteligente con monitor de salud y GPS integrado",
+                fecha: "2024-01-25"
+            }
+        ];
+
+        // Plantilla HTML para un producto
+        const productoPlantilla = (producto) => `
+            <li class="product-item" data-id="${producto.id}">
+                <h3 class="product-name">${producto.nombre}</h3>
+                <div class="product-price">$${producto.precio.toFixed(2)}</div>
+                <p class="product-description">${producto.descripcion}</p>
+                <div class="product-meta">
+                    <span><i class="far fa-calendar"></i> ${producto.fecha}</span>
+                    <span><i class="fas fa-hashtag"></i> ID: ${producto.id}</span>
+                </div>
+            </li>
+        `;
+
+        // Plantilla para estado vacío
+        const estadoVacioPlantilla = () => `
+            <li class="empty-state">
+                <i class="fas fa-box-open"></i>
+                <h3>No hay productos disponibles</h3>
+                <p>Agrega tu primer producto usando el formulario superior</p>
+            </li>
+        `;
+
+        // Referencias a elementos del DOM
+        const productList = document.getElementById('productList');
+        const productCount = document.getElementById('productCount');
+        const addProductBtn = document.getElementById('addProductBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const productNameInput = document.getElementById('productName');
+        const productPriceInput = document.getElementById('productPrice');
+        const productDescriptionInput = document.getElementById('productDescription');
+
+        // Función para generar un ID único
+        const generarIdUnico = () => {
+            return productos.length > 0 ? Math.max(...productos.map(p => p.id)) + 1 : 1;
+        };
+
+        // Función para obtener la fecha actual formateada
+        const obtenerFechaActual = () => {
+            const ahora = new Date();
+            return ahora.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+        };
+
+        // Función para renderizar la lista de productos
+        const renderizarProductos = () => {
+            // Limpiar la lista actual
+            productList.innerHTML = '';
+            
+            // Verificar si hay productos
+            if (productos.length === 0) {
+                productList.innerHTML = estadoVacioPlantilla();
+            } else {
+                // Renderizar cada producto usando la plantilla
+                productos.forEach(producto => {
+                    productList.innerHTML += productoPlantilla(producto);
+                });
+            }
+            
+            // Actualizar contador
+            productCount.textContent = productos.length;
+            
+            // Registrar en consola para depuración
+            console.log('Productos renderizados:', productos);
+        };
+
+        // Función para agregar un nuevo producto
+        const agregarProducto = () => {
+            // Validar campos del formulario
+            if (!productNameInput.value.trim() || !productPriceInput.value || !productDescriptionInput.value.trim()) {
+                alert('Por favor, completa todos los campos del formulario.');
+                return;
+            }
+            
+            // Crear nuevo producto
+            const nuevoProducto = {
+                id: generarIdUnico(),
+                nombre: productNameInput.value.trim(),
+                precio: parseFloat(productPriceInput.value),
+                descripcion: productDescriptionInput.value.trim(),
+                fecha: obtenerFechaActual()
+            };
+            
+            // Agregar al arreglo
+            productos.push(nuevoProducto);
+            
+            // Renderizar la lista actualizada
+            renderizarProductos();
+            
+            // Limpiar formulario
+            productNameInput.value = '';
+            productPriceInput.value = '';
+            productDescriptionInput.value = '';
+            
+            // Enfocar el primer campo
+            productNameInput.focus();
+            
+            // Mostrar mensaje de confirmación
+            console.log(`Producto agregado: ${nuevoProducto.nombre} - $${nuevoProducto.precio.toFixed(2)}`);
+        };
+
+        // Función para restablecer la lista a los productos iniciales
+        const restablecerLista = () => {
+            if (confirm('¿Estás seguro de que deseas restablecer la lista de productos? Se perderán todos los productos agregados.')) {
+                // Restaurar arreglo original
+                productos = [
+                    {
+                        id: 1,
+                        nombre: "Laptop Pro",
+                        precio: 1299.99,
+                        descripcion: "Portátil de alto rendimiento para trabajo y gaming",
+                        fecha: "2023-10-15"
+                    },
+                    {
+                        id: 2,
+                        nombre: "Smartphone X",
+                        precio: 899.50,
+                        descripcion: "Teléfono inteligente con cámara de 108MP y pantalla AMOLED",
+                        fecha: "2023-11-20"
+                    },
+                    {
+                        id: 3,
+                        nombre: "Tablet Lite",
+                        precio: 349.99,
+                        descripcion: "Tablet ligera ideal para lectura y multimedia",
+                        fecha: "2023-12-05"
+                    },
+                    {
+                        id: 4,
+                        nombre: "Auriculares Bluetooth",
+                        precio: 199.99,
+                        descripcion: "Auriculares inalámbricos con cancelación de ruido activa",
+                        fecha: "2024-01-10"
+                    },
+                    {
+                        id: 5,
+                        nombre: "Smartwatch Pro",
+                        precio: 299.95,
+                        descripcion: "Reloj inteligente con monitor de salud y GPS integrado",
+                        fecha: "2024-01-25"
+                    }
+                ];
+                
+                // Renderizar productos restablecidos
+                renderizarProductos();
+                
+                console.log('Lista de productos restablecida a los valores iniciales.');
+            }
+        };
+
+        // Función para manejar la tecla Enter en los campos del formulario
+        const manejarTeclaEnter = (e) => {
+            if (e.key === 'Enter') {
+                agregarProducto();
+            }
+        };
+
+        // Inicialización de eventos
+        const inicializarEventos = () => {
+            // Evento para agregar producto al hacer clic en el botón
+            addProductBtn.addEventListener('click', agregarProducto);
+            
+            // Evento para restablecer lista
+            resetBtn.addEventListener('click', restablecerLista);
+            
+            // Eventos para manejar la tecla Enter en los campos
+            productNameInput.addEventListener('keypress', manejarTeclaEnter);
+            productPriceInput.addEventListener('keypress', manejarTeclaEnter);
+            productDescriptionInput.addEventListener('keypress', manejarTeclaEnter);
+            
+            // Evento para actualizar el precio mientras se escribe
+            productPriceInput.addEventListener('input', function() {
+                if (this.value < 0) this.value = 0;
+            });
+        };
+
+        // Inicializar la aplicación cuando se cargue la página
+        document.addEventListener('DOMContentLoaded', () => {
+            // Renderizar productos iniciales
+            renderizarProductos();
+            
+            // Inicializar eventos
+            inicializarEventos();
+            
+            // Mensaje de consola
+            console.log('Aplicación de lista de productos cargada correctamente.');
+            console.log('Instrucciones:');
+            console.log('1. Usa el formulario para agregar nuevos productos');
+            console.log('2. Haz clic en "Restablecer Lista" para volver a los productos iniciales');
+            console.log('3. Los productos se renderizan dinámicamente usando plantillas de JavaScript');
+        });
+    </script>
+</body>
+</html>
